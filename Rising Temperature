@@ -1,0 +1,19 @@
+#SolutionUsingWindowFunction
+
+SELECT id
+FROM (
+    SELECT id,
+           temperature,
+           LAG(temperature) OVER (ORDER BY recordDate) AS prev_temp
+    FROM Weather
+) AS t
+WHERE prev_temp IS NOT NULL AND temperature > prev_temp;
+
+#SolutionUsingJoins
+
+SELECT Weather1.id
+FROM Weather AS Weather1
+JOIN Weather AS Weather2
+    ON Weather1.recordDate = DATE_ADD(Weather2.recordDate, INTERVAL 1 DAY)
+WHERE Weather1.temperature > Weather2.temperature;
+

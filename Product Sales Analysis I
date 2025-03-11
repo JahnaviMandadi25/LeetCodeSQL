@@ -1,0 +1,6 @@
+SELECT Product.product_name,
+Sales.year,
+Sales.price
+FROM Sales
+JOIN Product USING(product_id)
+ORDER BY Sales.sale_id;

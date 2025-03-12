@@ -1,0 +1,17 @@
+WITH ContestCounts AS (
+    SELECT Register.contest_id, COUNT(Register.user_id) AS RegisteredUsers
+    FROM Register
+    GROUP BY Register.contest_id
+),
+
+TotalUsers AS (
+    SELECT COUNT(Users.user_id) AS Total_Users FROM Users
+)
+
+SELECT Register.contest_id,
+ROUND(100 * ContestCounts.RegisteredUsers / TotalUsers.Total_Users, 2) AS percentage
+FROM ContestCounts
+JOIN TotalUsers
+JOIN Register ON ContestCounts.contest_id = Register.contest_id
+GROUP BY Register.contest_id, ContestCounts.RegisteredUsers, TotalUsers.total_users
+ORDER BY percentage DESC, Register.contest_id ASC;

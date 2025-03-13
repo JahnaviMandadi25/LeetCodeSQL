@@ -1,0 +1,7 @@
+WITH Ranked AS(
+    SELECT id ,
+           ROW_NUMBER() OVER(PARTITION BY email ORDER BY id) AS row_num
+    FROM Person
+)
+DELETE FROM PERSON
+WHERE id IN (SELECT id FROM Ranked WHERE row_num > 1);

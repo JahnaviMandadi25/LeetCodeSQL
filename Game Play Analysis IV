@@ -1,0 +1,19 @@
+WITH FirstLogin AS (
+    SELECT player_id, MIN(event_date) AS first_login_date
+    FROM Activity
+    GROUP BY player_id
+),
+NextDayLogins AS (
+    SELECT DISTINCT A.player_id
+    FROM Activity A
+    JOIN FirstLogin F ON A.player_id = F.player_id
+    WHERE A.event_date = DATE_ADD(F.first_login_date, INTERVAL 1 DAY)
+),
+TotalPlayers AS (
+    SELECT COUNT(DISTINCT player_id) AS total_players
+    FROM Activity
+)
+SELECT 
+    ROUND(COUNT(DISTINCT N.player_id) / T.total_players, 2) AS fraction
+FROM NextDayLogins N
+JOIN TotalPlayers T;

@@ -1,0 +1,9 @@
+SELECT player_id, device_id
+FROM (
+    select player_id, 
+    device_id,
+    RANK() OVER (PARTITION BY player_id ORDER BY event_date) AS rnk
+    FROM Activity 
+) AS ranked
+WHERE rnk = 1;
+
